@@ -86,24 +86,16 @@ namespace JurisUtilityBase
             JurisDbName = _jurisUtility.Company.DatabaseName;
             JBillsDbName = "JBills" + _jurisUtility.Company.Code;
             _jurisUtility.OpenDatabase();
-          
 
 
-            string TkprIndex2;
+
+            Status = "";
             cbStatus.ClearItems();
-            string SQLTkpr2 = "select [Status] from (select '*    (All Statuses)' as [Status]  union all select   [Status] + '    ' +  StatusDesc as [Status] from MatterStatusList where [Status] <> 'C') Emp order by [Status]";
-            DataSet myRSTkpr2 = _jurisUtility.RecordsetFromSQL(SQLTkpr2);
+            cbStatus.Items.Add("*    (All Matter Statuses)");
+            cbStatus.Items.Add("O    Open Only");
+            cbStatus.Items.Add("F    Final Bill Sent");
+            cbStatus.Items.Add("P    Marked For Purge");
 
-            if (myRSTkpr2.Tables[0].Rows.Count == 0)
-                Status = "";                      
-            else
-            {
-                foreach (DataRow dr in myRSTkpr2.Tables[0].Rows)
-                {
-                    TkprIndex2 = dr["Status"].ToString();
-                    cbStatus.Items.Add(TkprIndex2);
-                }
-            }
 
             //set lock items
             cbLock.ClearItems();
@@ -183,7 +175,6 @@ namespace JurisUtilityBase
             else
                 sql = "select distinct dbo.jfn_FormatClientCode(clicode) as ClientCode, clireportingname as ClientName, dbo.jfn_FormatMatterCode(MatCode) as MatterCode,  matreportingname as MatterName, matsysnbr from matter inner join billto on billtosysnbr = matbillto inner join MatOrigAtty on MOrigMat = matsysnbr inner join client on clisysnbr = matclinbr where MatStatusFlag <> 'C' and " + where;
             DataSet matsys = _jurisUtility.RecordsetFromSQL(sql);
-
             if (matsys.Tables[0].Rows.Count == 0)
                 MessageBox.Show("No matters matched that criteria", "No changes", MessageBoxButtons.OK, MessageBoxIcon.None);
             else
@@ -263,7 +254,15 @@ namespace JurisUtilityBase
                         }
                     }
                 }
-
+                cbStatus.SelectedIndex = 0;
+                cbLock.SelectedIndex = 0;
+                cbBT.SelectedIndex = 0;
+                cbOT.SelectedIndex = 0;
+                BT = "*";
+                OT = "*";
+                Status = "*";
+                Lock = "*";
+                dtOpen.Value = DateTime.Now;
 
             }
 
@@ -274,9 +273,9 @@ namespace JurisUtilityBase
         {
             //if star...simply exclude from where because its all results anyway
             string where = "";
-            if (!Status.Equals("*"))
+            if (!Status.Equals("*") && !string.IsNullOrEmpty(Status))
                 where = " MatStatusFlag = '" + Status + "' ";
-            if (!Lock.Equals("*"))
+            if (!Lock.Equals("*") && !string.IsNullOrEmpty(Lock))
             {
                 if (string.IsNullOrEmpty(where))
                     where =  " MatLockFlag = " + Lock + " ";
@@ -286,7 +285,7 @@ namespace JurisUtilityBase
 
             if (checkBoxBT.Checked)
             {
-                if (!BT.Equals("*"))
+                if (!BT.Equals("*") && !string.IsNullOrEmpty(BT))
                 {
                     if (string.IsNullOrEmpty(where))
                         where = " BillToBillingAtty in (select empsysnbr from employee where empid = '" + BT + "') ";
@@ -297,7 +296,7 @@ namespace JurisUtilityBase
 
             if (checkBoxOT.Checked)
             {
-                if (!OT.Equals("*"))
+                if (!OT.Equals("*") && !string.IsNullOrEmpty(OT))
                 {
                     if (string.IsNullOrEmpty(where))
                         where = " MOrigAtty in (select empsysnbr from employee where empid = '" + OT + "') ";
@@ -312,35 +311,42 @@ namespace JurisUtilityBase
         {
             string sql = "";
             sql =
-                "  select dbo.jfn_FormatClientCode(clicode) as clicode, dbo.jfn_FormatMatterCode(MatCode) as matcode, cast(sum(ppd) as money) as ppd, cast(sum(UT) as money) as UT, cast(sum(UE) as money) as UE, cast(sum(AR) as money) as AR, cast(sum(Trust) as money) as Trust " +
+                "  select dbo.jfn_FormatClientCode(clicode) as clicode, dbo.jfn_FormatMatterCode(MatCode) as matcode, cast(sum(ppd) as money) as ppd, cast(sum(UT) as money) as UT, cast(sum(UE) as money) as UE, cast(sum(AR) as money) as AR, cast(sum(Trust) as money) as Trust, cast(sum(UTHrs) as money) as UTHrs, sum(pb) as pb " +
                 "from( " +
-                "select matsysnbr as matsys, MatPPDBalance as ppd, 0 as UT, 0 as UE, 0 as AR, 0 as Trust " +
+                "select matsysnbr as matsys, MatPPDBalance as ppd, 0 as UT, 0 as UE, 0 as AR, 0 as Trust,  0 as UTHrs, 0 as pb " +
                   " from matter " +
                   " where MatPPDBalance <> 0 and matsysnbr = " + matsysnbr +
                   " union all " +
-                   " select utmatter as matsys, 0 as ppd, sum(utamount) as UT, 0 as UE, 0 as AR, 0 as Trust " +
+                   " select utmatter as matsys, 0 as ppd, sum(utamount) as UT, 0 as UE, 0 as AR, 0 as Trust,  sum(UTActualHrsWrk) as UTHrs, 0 as pb " +  
                   " from unbilledtime where utmatter = " + matsysnbr +
                   " group by utmatter " +
-                  " having sum(utamount) <> 0 " +
+                  " having sum(utamount) <> 0  or sum(UTActualHrsWrk) <> 0 " +
                   " union all " +
-                  " select uematter as matsys, 0 as ppd, 0 as UT, sum(ueamount) as UE, 0 as AR, 0 as Trust " +
+                  " select uematter as matsys, 0 as ppd, 0 as UT, sum(ueamount) as UE, 0 as AR, 0 as Trust  ,  0 as UTHrs, 0 as pb " +
                  " from unbilledexpense where uematter = " + matsysnbr +
                   "  group by uematter " +
                 " having sum(ueamount) <> 0 " +
                  " union all " +
-                "  select armmatter as matsys, 0 as ppd, 0 as UT, 0 as UE, sum(ARMBalDue) as AR, 0 as Trust " +
+                "  select armmatter as matsys, 0 as ppd, 0 as UT, 0 as UE, sum(ARMBalDue) as AR, 0 as Trust, 0 as UTHrs, 0 as pb  " +
                 "  from armatalloc where armmatter = " + matsysnbr +
                 "  group by armmatter " +
                 "  having sum(ARMBalDue) <> 0 " +
                 "  union all " +
-                "  select tamatter as matsys, 0 as ppd, 0 as UT, 0 as UE, 0 as AR, sum(TABalance) as Trust " +
+                "  select tamatter as matsys, 0 as ppd, 0 as UT, 0 as UE, 0 as AR, sum(TABalance) as Trust, 0 as UTHrs, 0 as pb " +
                  " from trustaccount where tamatter = " + matsysnbr +
                 "  group by tamatter " +
-                "  having sum(TABalance) <> 0) hhg " +
+                "  having sum(TABalance) <> 0 " +
+                " union all " +
+                " SELECT matsysnbr as matsys, 0 as ppd, 0 as UT, 0 as UE, 0 as AR, 0 as Trust,  0 as UTHrs, count(pbsysnbr) as pb " +
+                "   FROM PreBill " +
+                "   inner join matter on matbillto = pbbillto " +
+                "   where matsysnbr = " + matsysnbr +
+                "   group by matsysnbr" +  
+                " ) hhg " +
                 " inner join matter on hhg.matsys = matsysnbr " +
                 " inner join client on clisysnbr = matclinbr " +
                 "  group by dbo.jfn_FormatClientCode(clicode), dbo.jfn_FormatMatterCode(MatCode) " +
-                "  having sum(ppd) <> 0 or sum(UT)  <> 0 or sum(UE)  <> 0 or sum(AR)  <> 0 or sum(Trust) <> 0";
+                "  having sum(ppd) <> 0 or sum(UT)  <> 0 or sum(UE)  <> 0 or sum(AR)  <> 0 or sum(Trust) <> 0 or sum(UTHrs) <> 0 or sum(pb) <> 0 ";
 
             DataSet ds = new DataSet();
             ds = _jurisUtility.RecordsetFromSQL(sql);
@@ -351,10 +357,11 @@ namespace JurisUtilityBase
                 ErrorLog er = new ErrorLog();
                 er.client = ds.Tables[0].Rows[0][0].ToString();
                 er.matter = ds.Tables[0].Rows[0][1].ToString();
-                er.message = "Cannot close matter " + er.client + "/" + er.matter + " because balance(s) exist. See below for more detail: \r\n" +
+                er.message = "Cannot close matter " + er.client + "/" + er.matter + " because balance(s)/problems exist. See below for more detail: \r\n" +
                     "Prepaid Balance: " + ds.Tables[0].Rows[0][2].ToString() + "\r\n" +
-                    "Unbilled Time Balance: " + ds.Tables[0].Rows[0][3].ToString() + "\r\n" +
+                    "Unbilled Time Balance: " + ds.Tables[0].Rows[0][3].ToString() + " and Hours: " + ds.Tables[0].Rows[0][7].ToString() +  "\r\n" +
                     "Unbilled Expense Balance: " + ds.Tables[0].Rows[0][4].ToString() + "\r\n" +
+                    "Open Prebills: " + ds.Tables[0].Rows[0][8].ToString() + "\r\n" +
                     "A/R Balance: " + ds.Tables[0].Rows[0][5].ToString() + "\r\n" +
                     "Trust Balance: " + ds.Tables[0].Rows[0][6].ToString() + "\r\n" + "\r\n";
                 errorList.Add(er);

@@ -31,7 +31,7 @@ namespace JurisUtilityBase
         {
             this.labelVersion.Text = @"Version " + Application.ProductVersion;
             this.labelCopyright.Text = @"Copyright © 1996-" + DateTime.Now.Year;
-            this.labelAppName.Text = "PKI - Matter Closer";
+            this.labelAppName.Text = "JPS - Matter Closer";
             this.labelCompany.Text = Application.CompanyName;
             this.Refresh();
         }

@@ -355,7 +355,7 @@
             this.MinimizeBox = false;
             this.Name = "UtilityBaseMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "PKI - Matter Closer";
+            this.Text = "JPS - Matter Closer With Lock Status";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.JurisLogoImageBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.LexisNexisLogoPictureBox)).EndInit();

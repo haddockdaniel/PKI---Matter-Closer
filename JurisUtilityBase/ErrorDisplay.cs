@@ -31,12 +31,14 @@ namespace JurisUtilityBase
 
         private void buttonBack_Click(object sender, EventArgs e)
         {
+            richTextBox1.Text = "";
             this.Close();
 
         }
 
         private void buttonPrint_Click(object sender, EventArgs e)
         {
+            Clipboard.Clear();
             Clipboard.SetText(richTextBox1.Text);
         }
     }

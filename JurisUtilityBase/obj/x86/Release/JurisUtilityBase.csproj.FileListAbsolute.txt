@@ -196,11 +196,6 @@ D:\Projects\PKI - Matter Closer\JurisUtilityBase\obj\x86\Release\JurisUtilityBas
 D:\Projects\PKI - Matter Closer\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.SplashScreen.resources
 D:\Projects\PKI - Matter Closer\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csproj.GenerateResource.cache
 D:\Projects\PKI - Matter Closer\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csproj.CoreCompileInputs.cache
-D:\Projects\PKI - Matter Closer\JurisUtilityBase\bin\x86\Release\PKI – Matter Closer.exe.config
-D:\Projects\PKI - Matter Closer\JurisUtilityBase\bin\x86\Release\PKI – Matter Closer.exe.manifest
-D:\Projects\PKI - Matter Closer\JurisUtilityBase\bin\x86\Release\PKI – Matter Closer.application
-D:\Projects\PKI - Matter Closer\JurisUtilityBase\bin\x86\Release\PKI – Matter Closer.exe
-D:\Projects\PKI - Matter Closer\JurisUtilityBase\bin\x86\Release\PKI – Matter Closer.pdb
 D:\Projects\PKI - Matter Closer\JurisUtilityBase\bin\x86\Release\C1.C1Report.4.dll
 D:\Projects\PKI - Matter Closer\JurisUtilityBase\bin\x86\Release\C1.Win.C1Input.4.dll
 D:\Projects\PKI - Matter Closer\JurisUtilityBase\bin\x86\Release\C1.Win.C1Report.4.dll
@@ -212,9 +207,14 @@ D:\Projects\PKI - Matter Closer\JurisUtilityBase\bin\x86\Release\JurisIDef21.dll
 D:\Projects\PKI - Matter Closer\JurisUtilityBase\bin\x86\Release\JurisStr21.dll
 D:\Projects\PKI - Matter Closer\JurisUtilityBase\bin\x86\Release\JurisStr221.dll
 D:\Projects\PKI - Matter Closer\JurisUtilityBase\bin\x86\Release\JurisSVR21.dll
-D:\Projects\PKI - Matter Closer\JurisUtilityBase\obj\x86\Release\PKI – Matter Closer.exe.manifest
-D:\Projects\PKI - Matter Closer\JurisUtilityBase\obj\x86\Release\PKI – Matter Closer.application
 D:\Projects\PKI - Matter Closer\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.csproj.CopyComplete
-D:\Projects\PKI - Matter Closer\JurisUtilityBase\obj\x86\Release\PKI – Matter Closer.exe
-D:\Projects\PKI - Matter Closer\JurisUtilityBase\obj\x86\Release\PKI – Matter Closer.pdb
 D:\Projects\PKI - Matter Closer\JurisUtilityBase\obj\x86\Release\JurisUtilityBase.ErrorDisplay.resources
+D:\Projects\PKI - Matter Closer\JurisUtilityBase\bin\x86\Release\JPS - Matter Closer With Lock Status.exe.config
+D:\Projects\PKI - Matter Closer\JurisUtilityBase\bin\x86\Release\JPS - Matter Closer With Lock Status.exe.manifest
+D:\Projects\PKI - Matter Closer\JurisUtilityBase\bin\x86\Release\JPS - Matter Closer With Lock Status.application
+D:\Projects\PKI - Matter Closer\JurisUtilityBase\bin\x86\Release\JPS - Matter Closer With Lock Status.exe
+D:\Projects\PKI - Matter Closer\JurisUtilityBase\bin\x86\Release\JPS - Matter Closer With Lock Status.pdb
+D:\Projects\PKI - Matter Closer\JurisUtilityBase\obj\x86\Release\JPS - Matter Closer With Lock Status.exe.manifest
+D:\Projects\PKI - Matter Closer\JurisUtilityBase\obj\x86\Release\JPS - Matter Closer With Lock Status.application
+D:\Projects\PKI - Matter Closer\JurisUtilityBase\obj\x86\Release\JPS - Matter Closer With Lock Status.exe
+D:\Projects\PKI - Matter Closer\JurisUtilityBase\obj\x86\Release\JPS - Matter Closer With Lock Status.pdb
